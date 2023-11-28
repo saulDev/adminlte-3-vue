@@ -30,9 +30,11 @@ export default class User extends Vue {
                 });
             }
             localStorage.removeItem('authentication');
+            localStorage.removeItem('jwt');
             this.$router.replace('/login');
         } catch (error) {
             localStorage.removeItem('authentication');
+            localStorage.removeItem('jwt');
             this.$router.replace('/login');
         }
     }

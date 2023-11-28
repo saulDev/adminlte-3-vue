@@ -1,6 +1,7 @@
 /* eslint-disable no-async-promise-executor */
 import {UserManager, UserManagerSettings} from 'oidc-client-ts';
 import {sleep} from './helpers';
+import axios from 'axios';
 
 const GOOGLE_CONFIG: UserManagerSettings = {
     authority: 'https://accounts.google.com',
@@ -16,17 +17,62 @@ export const GoogleProvider = new UserManager(GOOGLE_CONFIG);
 
 export const authLogin = (email: string, password: string) => {
     return new Promise(async (res, rej) => {
-        await sleep(500);
-        if (email === 'admin@example.com' && password === 'admin') {
-            localStorage.setItem(
-                'authentication',
-                JSON.stringify({profile: {email: 'admin@example.com'}})
-            );
-            return res({profile: {email: 'admin@example.com'}});
+        //await sleep(500);
+        //if (email === 'admin@example.com' && password === 'admin') {
+        //    localStorage.setItem(
+        //        'authentication',
+        //        JSON.stringify({profile: {email: 'admin@example.com'}})
+        //    );
+        //    return res({profile: {email: 'admin@example.com'}});
+        //}
+        //return rej({message: 'Credentials are wrong!'});
+        
+        try {
+            const result = await axios.post('http://localhost/api/v1/login', {
+                email: email,
+                password: password
+              });
+
+              localStorage.setItem('jwt', result.data.token.plainTextToken);
+
+            return res(result.data.token.plainTextToken); 
+        } catch (error: any){
+            return rej({message: error.response.data.message})
         }
-        return rej({message: 'Credentials are wrong!'});
+        
     });
 };
+
+export const userRegister = (name: string, email: string, password: string, rePassword: string) => {
+    return new Promise(async (res, rej) => {
+        try {
+            const result = await axios.post('http://localhost/api/v1/register', {
+                name: name,
+                email: email,
+                password: password,
+                password_confirmation: rePassword,
+            });
+            localStorage.setItem('jwt', result.data.token.plainTextToken);
+            return res(result.data.token.plainTextToken); 
+        } catch (error: any) {
+            return rej({message: error.response.data.message})
+        }
+    });
+}
+
+export const isLoggedIn = () => {
+    return new Promise(async (res, rej) => {
+        try {
+            const token = localStorage.getItem('jwt')
+            axios.defaults.headers.common['authorization'] = 'Bearer ' + token;
+            const result = await axios.get('http://localhost/api/v1/user');
+            return res(true)
+        } catch (error: any) {
+            
+        }
+        return res(false);
+    });
+}
 
 export const getAuthStatus = () => {
     return new Promise(async (res) => {

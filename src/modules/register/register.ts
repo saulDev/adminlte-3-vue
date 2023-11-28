@@ -2,7 +2,7 @@ import {Component, Vue} from 'vue-facing-decorator';
 import Input from '@/components/input/input.vue';
 import {useToast} from 'vue-toastification';
 import {PfButton, PfCheckbox} from '@profabric/vue-components';
-import {GoogleProvider, authLogin} from '@/utils/oidc-providers';
+import {GoogleProvider, userRegister} from '@/utils/oidc-providers';
 
 @Component({
     components: {
@@ -13,6 +13,7 @@ import {GoogleProvider, authLogin} from '@/utils/oidc-providers';
 })
 export default class Register extends Vue {
     private appElement: HTMLElement | null = null;
+    public name: string = '';
     public email: string = '';
     public password: string = '';
     public rePassword: string = '';
@@ -33,7 +34,7 @@ export default class Register extends Vue {
     public async registerByAuth(): Promise<void> {
         try {
             this.isAuthLoading = true;
-            const response = await authLogin(this.email, this.password);
+            const response = await userRegister(this.name, this.email, this.password, this.rePassword);
             this.$store.dispatch('auth/setAuthentication', response);
             this.toast.success('Register succeeded');
             this.isAuthLoading = false;

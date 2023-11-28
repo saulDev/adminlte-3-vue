@@ -5,6 +5,7 @@ import Main from '@/modules/main/main.vue';
 import Login from '@/modules/login/login.vue';
 import Register from '@/modules/register/register.vue';
 
+import Movies from '@/pages/movies/movies.vue';
 import Dashboard from '@/pages/dashboard/dashboard.vue';
 import Profile from '@/pages/profile/profile.vue';
 import ForgotPassword from '@/modules/forgot-password/forgot-password.vue';
@@ -12,7 +13,8 @@ import RecoverPassword from '@/modules/recover-password/recover-password.vue';
 import PrivacyPolicy from '@/modules/privacy-policy/privacy-policy.vue';
 import SubMenu from '@/pages/main-menu/sub-menu/sub-menu.vue';
 import Blank from '@/pages/blank/blank.vue';
-import {getAuthStatus, GoogleProvider} from '@/utils/oidc-providers';
+import {getAuthStatus, GoogleProvider, isLoggedIn} from '@/utils/oidc-providers';
+
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -59,6 +61,14 @@ const routes: Array<RouteRecordRaw> = [
                 path: '',
                 name: 'Dashboard',
                 component: Dashboard,
+                meta: {
+                    requiresAuth: true
+                }
+            },
+            {
+                path: 'movies',
+                name: 'Películas',
+                component: Movies,
                 meta: {
                     requiresAuth: true
                 }
@@ -112,13 +122,16 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     let storedAuthentication = store.getters['auth/authentication'];
 
-    if (!storedAuthentication) {
-        storedAuthentication = await checkSession();
-    }
+    let isLogged = await isLoggedIn();
 
-    if (Boolean(to.meta.requiresAuth) && Boolean(!storedAuthentication)) {
+    if (Boolean(to.meta.requiresAuth) && Boolean(!isLogged)) {
         return next('/login');
     }
+
+    if (Boolean(to.meta.requiresUnauth) && Boolean(isLogged)) {
+        return next('/');
+    } 
+
     return next();
 });
 

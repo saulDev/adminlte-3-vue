@@ -1,18 +1,24 @@
 <div class="register-box">
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
-            <router-link to="/" class="h1"><b>Admin</b>LTE</router-link>
+            <router-link to="/" class="h1"><b>Movies</b>LTE</router-link>
         </div>
         <div class="card-body">
             <p class="login-box-msg">{{ $t("labels.registerMembership") }}</p>
 
             <form @submit.prevent="registerByAuth">
                 <app-input
+                    icon="group"
+                    class="mb-3"
+                    type="text"
+                    placeholder="Nombre"
+                    v-model="name"
+                />
+                <app-input
                     icon="envelope"
                     class="mb-3"
                     type="email"
                     placeholder="Email"
-                    autocomplete="off"
                     v-model="email"
                 />
                 <app-input
@@ -32,12 +38,6 @@
                     v-model="rePassword"
                 />
                 <div class="row">
-                    <div class="col-7">
-                        <pf-checkbox type="icheck" v-model="agreeTerms">
-                            {{ $t("labels.iAgree") }}
-                            <a href="#">{{ $t("labels.terms") }}</a>
-                        </pf-checkbox>
-                    </div>
                     <!-- /.col -->
                     <div class="col-5">
                         <pf-button
@@ -52,19 +52,6 @@
                     <!-- /.col -->
                 </div>
             </form>
-
-            <div class="social-auth-links text-center">
-                <pf-button
-                    block="true"
-                    theme="danger"
-                    @click="registerByGoogle"
-                    :loading="isGoogleLoading"
-                    :disabled="isAuthLoading"
-                >
-                    <i class="fab fa-google mr-2"></i>
-                    <span> {{ $t("labels.signUpUsingGoogle") }} </span>
-                </pf-button>
-            </div>
 
             <router-link to="/login" class="text-center">
                 {{ $t("labels.alreadyHaveMembership") }}

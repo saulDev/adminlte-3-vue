@@ -15,22 +15,11 @@
                 {{ $t("labels.home") }}
             </router-link>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <router-link to="/" class="nav-link">
-                {{ $t("labels.contact") }}
-            </router-link>
-        </li>
     </ul>
 
     <ul class="navbar-nav ml-auto">
-        <messages-dropdown></messages-dropdown>
-        <notifications-dropdown></notifications-dropdown>
-        <languages-dropdown></languages-dropdown>
+      
         <user-dropdown></user-dropdown>
-        <li class="nav-item">
-            <button class="nav-link" @click="onToggleControlSidebar">
-                <i class="fas fa-th-large"></i>
-            </button>
-        </li>
+    
     </ul>
 </nav>

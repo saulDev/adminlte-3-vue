@@ -5,6 +5,7 @@ import {Component, Prop, Vue} from 'vue-facing-decorator';
     emits: ['update:modelValue']
 })
 export default class Input extends Vue {
+    @Prop() name: string;
     @Prop() modelValue: string;
     @Prop() icon: string;
     @Prop() type: string;
